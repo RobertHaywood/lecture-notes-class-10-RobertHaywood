@@ -1,9 +1,11 @@
 ---
 title: "Introduction to probability"
-author: ""
-date: ""
-output: html_document
-editor_options: 
+author: "Robert Haywood"
+date: "2/27/2021"
+output:
+  pdf_document: default
+  html_document: default
+editor_options:
   chunk_output_type: console
 ---
 
@@ -50,16 +52,26 @@ xtabs(~ Treatment + Improved, data = Arthritis) %>%
 
 - How many patients were enrolled in the clinical trial?
 
+84 patients.
+
 - What is the probability a randomly selected patient received the placebo?
+
+43/84 = 0.512
 
 - What is the probability a randomly selected patient received the placebo
   and had a marked improvement?
   
+7/84 = 0.0833
+  
 - What is the probability a randomly selected patient received the placebo
   and the treatment?
   
+0
+  
 - What is the probability a randomly selected patient had some improvement or
   was on the treatment?
+
+48/84 = 0.571
 
 ## Using computer simulations to calculate probabilities
 
@@ -101,6 +113,8 @@ prop.table(counts)
 ```
 
 How close is this value to the "true" probability?
+
+0.125 is the "true" value, 0.1216 is given by the simulation.
 
 **To summarize our process:**
 
@@ -157,17 +171,34 @@ Perform a simulation to compute this empirical probability.
 
 Write down your guess to the answer before you calculate it.
 
-```{r simulate_rolls}
+I think the first situation would occur 1/15 = 0.067.
+I think the second would be 2/15.
 
+```{r simulate_rolls}
+dice <- c(1, 2, 3, 4, 5, 6)
+two_rolls <- tibble(
+  roll1 = sample(dice, size = 10000, replace = TRUE),
+  roll2 = sample(dice, size = 10000, replace = TRUE))
+two_rolls
 ```
 
 ```{r identify_events}
-
+two_rolls <- two_rolls %>%
+  mutate(square = roll1 * roll1 == roll2) %>%
+  mutate(diff = abs(roll2 - roll1) == 4)
 ```
 
 ```{r summarize_rolls}
+two_rolls %>% 
+  count(square) %>% 
+  mutate(prop = n / sum(n))
 
+two_rolls %>%
+  count(diff) %>%
+  mutate(prop = n / sum(n))
 ```
+
+Based on these results I think I was right.
 
 ## Additional Resources-please look at before Weds.
 
